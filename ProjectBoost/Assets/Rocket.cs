@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Rocket : MonoBehaviour
 {
+    [SerializeField] float rcsThrust = 100f;
+    [SerializeField] float mainThrust = 100f;
     private Rigidbody rigidBody;
     private AudioSource rocketThrusting;
 
@@ -26,10 +28,21 @@ public class Rocket : MonoBehaviour
       Thrust();
       Rotate();
     }
+
+    private void OnCollisionEnter(Collision collision){
+      switch(collision.gameObject.tag){
+        case "Friendly": 
+          break;
+        case "Fuel": print("Fuel");
+          break;
+        default: print("sup bish");
+          break;
+      }
+    }
     private void Thrust(){
       if(Input.GetKey(KeyCode.Space)){
-              print("Space Pressed");
-              rigidBody.AddRelativeForce(Vector3.up);
+             
+              rigidBody.AddRelativeForce(Vector3.up * mainThrust);
 
               if(!rocketThrusting.isPlaying){
 
@@ -40,17 +53,19 @@ public class Rocket : MonoBehaviour
           }
   }
 
-  private void Rotate(){
+    private void Rotate(){
 
-      rigidBody.freezeRotation = true;//take manual control of rotation
+    rigidBody.freezeRotation = true;//take manual control of rotation
+     float rotationThisFrame = Time.deltaTime * rcsThrust;
 
     if(Input.GetKey(KeyCode.A)){
 
-      transform.Rotate(Vector3.forward);
+     
+      transform.Rotate(Vector3.forward * rotationThisFrame);
 
     } else if(Input.GetKey(KeyCode.D)){
-
-      transform.Rotate(Vector3.back);
+      
+      transform.Rotate(Vector3.back * rotationThisFrame);
     }
       rigidBody.freezeRotation = false; // resume physics control of rotation
       
