@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
+
     [SerializeField] float rcsThrust = 100f;
     [SerializeField] float mainThrust = 100f;
     private Rigidbody rigidBody;
     private AudioSource rocketThrusting;
+
+    enum State{Alive,Dying, Transcending};
+    State state = State.Alive;
 
     // Start is called before the first frame update
     void Start()
@@ -25,17 +27,34 @@ public class Rocket : MonoBehaviour
 
     private void ProcessInput()
     {
-      Thrust();
-      Rotate();
+      //todo stop sound on death
+      if(state == State.Alive){
+        Thrust();
+        Rotate();
+      }
     }
 
     private void OnCollisionEnter(Collision collision){
+      Scene currentScene = SceneManager.GetActiveScene ();
+      string sceneName = currentScene.name;
+
+        if(state != State.Alive){
+          return;
+        }
       switch(collision.gameObject.tag){
         case "Friendly": 
           break;
-        case "Fuel": print("Fuel");
+        case "Finished":
+          state = State.Transcending;
+          Invoke("LoadNextScene", 1f);
           break;
-        default: print("sup bish");
+        default: print("Dead");
+          state = State.Dying;
+          if(sceneName.Equals("Level 2")){
+            Invoke("LoadSecondLevel", 1f);
+          } else {
+            Invoke("LoadFirstLevel", 1f);
+          }
           break;
       }
     }
@@ -69,5 +88,16 @@ public class Rocket : MonoBehaviour
     }
       rigidBody.freezeRotation = false; // resume physics control of rotation
       
+  }
+
+  private void LoadNextScene(){
+      SceneManager.LoadScene(1);
+  }
+
+  private void LoadFirstLevel(){
+    SceneManager.LoadScene(0);
+  }
+  private void LoadSecondLevel(){
+    SceneManager.LoadScene(1);
   }
 } //end of class
