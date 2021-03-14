@@ -255,8 +255,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c48f43d2971b374b9442a8db58414e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rcsThrust: 150
-  mainThrust: 50
+  rcsThrust: 300
+  mainThrust: 2000
+  LevelLoadDelay: 2
   mainEngine: {fileID: 8300000, guid: 6ff8b99e3a2a7b447b28856974f7f499, type: 3}
   success: {fileID: 8300000, guid: 53174802c6335b64caaa664ff04dda62, type: 3}
   death: {fileID: 8300000, guid: bd9b95c0e7ffaae4bb023a8ac2670e77, type: 3}

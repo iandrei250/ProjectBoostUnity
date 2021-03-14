@@ -6,12 +6,14 @@ public class Rocket : MonoBehaviour
 
     [SerializeField] float rcsThrust = 100f;
     [SerializeField] float mainThrust = 100f;
+    [SerializeField] float LevelLoadDelay = 2f;
     [SerializeField] AudioClip mainEngine;
     [SerializeField] AudioClip success;
     [SerializeField] AudioClip death;
     [SerializeField] ParticleSystem mainEngineParticles;
     [SerializeField] ParticleSystem successParticles;
     [SerializeField] ParticleSystem deathParticles;
+
     private Rigidbody rigidBody;
     private AudioSource audioSource;
 
@@ -98,7 +100,7 @@ public class Rocket : MonoBehaviour
   }
 
   public void ApplyThrust(){
-     rigidBody.AddRelativeForce(Vector3.up * mainThrust);
+     rigidBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
 
       if(!audioSource.isPlaying){
 
@@ -119,9 +121,9 @@ public class Rocket : MonoBehaviour
 
     deathParticles.Play();
     if(sceneName.Equals("Level 2")){
-      Invoke("LoadSecondLevel", 1f);
+      Invoke("LoadSecondLevel", LevelLoadDelay);
     } else {
-      Invoke("LoadFirstLevel", 1f);
+      Invoke("LoadFirstLevel", LevelLoadDelay);
     }
   }
   public void onSuccess()
@@ -130,6 +132,6 @@ public class Rocket : MonoBehaviour
     audioSource.Stop();
     audioSource.PlayOneShot(success);
     successParticles.Play();
-    Invoke("LoadNextScene", 1f);
+    Invoke("LoadNextScene", LevelLoadDelay);
   }
 } //end of class
